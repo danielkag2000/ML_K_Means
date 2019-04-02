@@ -60,6 +60,21 @@ def init_centroids(X, K):
 
 
 def k_means(img_pix, k, iter_num = 10):
+    """
+    Execute the K-Means algorithm on the dataset (in this case the image)
+
+    Parameters
+    ----------
+    img_pix : the norm image that we are clustering
+    K : int
+        The number of centroids.
+    iter_num: the number of iteration to do in the training
+
+    Returns
+    -------
+    centroids : ndarray, shape (K, n_features)
+    """
+
     # the centroids
     centroids = init_centroids(img_pix, k)
 
@@ -91,6 +106,19 @@ def k_means(img_pix, k, iter_num = 10):
 
 
 def clust(img, centroids):
+    """
+    Execute the K-Means clustering algorithm on the the image (after training)
+
+    Parameters
+    ----------
+    img : the norm image that we are clustering
+    centroids : ndarray, shape (K, n_features)
+
+    Returns
+    -------
+    image : the clustered image with K colors
+    """
+
     img_size = img.shape
     new_img = np.array([[[0. for k in range(img_size[2])] for j in range(img_size[1])] for i in range(img_size[0])])
     for row in range(img_size[0]):
@@ -108,10 +136,21 @@ def clust(img, centroids):
 
 
 
-
-
-
 def norm(path = 'dog.jpeg'):
+    """
+    Normalize the picture
+
+    Parameters
+    ----------
+    path: string
+            the path to the image
+
+    Returns
+    -------
+    A : the normalized image
+    X : the pixels of the image
+    """
+
     # data preperation (loading, normalizing, reshaping)
     A = imread(path)
     A_norm = A.astype(float) / 255.
@@ -120,6 +159,15 @@ def norm(path = 'dog.jpeg'):
     return A_norm, X
 
 def show(norm_img):
+    """
+    Show the image
+
+    Parameters
+    ----------
+    norm_img: image
+            the normalized image to show
+    """
+
     # plot the image
     plt.imshow(norm_img)
     plt.grid(False)
@@ -127,14 +175,15 @@ def show(norm_img):
 
 
 def main():
-    A, X = norm()
-    #print("A is:\n" + str(A))
+    normed_image, X = norm()
 
+    #print("A is:\n" + str(A))
     #print("\n\nX is:\n" + str(X))
     #show(A)
-    c = k_means(X, 2)
-    XS = clust(A, c)
-    show(XS)
+    
+    centroids = k_means(X, 2)
+    image_to_show = clust(normed_image, centroids)
+    show(image_to_show)
 
 
 if __name__ == '__main__':
